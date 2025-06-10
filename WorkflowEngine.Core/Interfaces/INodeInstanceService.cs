@@ -61,6 +61,7 @@ namespace WorkflowEngine.Core.Interfaces
         /// was successful; otherwise, <see langword="false"/>.</returns>
         Task<bool> UpdateAsync(Guid projectId, string windowsUser, UpdateNodeInstanceRequest req);
 
+
         /// <summary>
         /// Deletes a node associated with the specified project.
         /// </summary>

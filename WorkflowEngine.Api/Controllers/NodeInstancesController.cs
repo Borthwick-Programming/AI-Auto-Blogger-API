@@ -69,22 +69,41 @@ namespace WorkflowEngine.Api.Controllers
         }
 
         /// <summary>
-        /// PUT api/projects/{projectId}/nodeinstances/{nodeId}
-        /// Updates an existing node instance within the specified project.
+        /// Updates the specified node instance within a project.
         /// </summary>
+        /// <remarks>This method performs validation to ensure the <paramref name="nodeId"/> matches the
+        /// <paramref name="req.Id"/>. If the update operation fails or the node instance cannot be retrieved, a <see
+        /// cref="NotFoundResult"/> is returned.</remarks>
         /// <param name="projectId">The unique identifier of the project containing the node instance to update.</param>
-        /// <param name="nodeId">The unique identifier of the node instance to update. Must match the <paramref name="req"/> ID.</param>
-        /// <param name="req">The request object containing the updated details of the node instance.</param>
-        /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  Returns <see
-        /// cref="NoContentResult"/> if the update is successful,  <see cref="BadRequestResult"/> if the <paramref
-        /// name="nodeId"/> does not match the ID in <paramref name="req"/>,  or <see cref="NotFoundResult"/> if the
-        /// node instance does not exist.</returns>
+        /// <param name="nodeId">The unique identifier of the node instance to update. Must match the <see
+        /// cref="UpdateNodeInstanceRequest.Id"/> value.</param>
+        /// <param name="req">The request object containing the updated properties of the node instance.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating the result of the operation: <list type="bullet">
+        /// <item><description><see cref="BadRequestResult"/> if the <paramref name="nodeId"/> does not match the
+        /// <paramref name="req.Id"/>.</description></item> <item><description><see cref="NotFoundResult"/> if the node
+        /// instance or project is not found.</description></item> <item><description><see cref="OkObjectResult"/>
+        /// containing the updated node instance if the operation succeeds.</description></item> </list></returns>
         [HttpPut("{nodeId:guid}")]
-        public async Task<IActionResult> Update(Guid projectId, Guid nodeId, UpdateNodeInstanceRequest req)
+        public async Task<IActionResult> Update(
+         Guid projectId,
+         Guid nodeId,
+         UpdateNodeInstanceRequest req)
         {
-            if (nodeId != req.Id) return BadRequest();
+            // unchanged validation:
+            if (nodeId != req.Id)
+                return BadRequest();
+
+            // Attempt the update:
             var ok = await _nodes.UpdateAsync(projectId, _currentUser, req);
-            return ok ? NoContent() : NotFound();
+            if (!ok)
+                return NotFound();
+
+            var updated = await _nodes.GetAsync(projectId, nodeId, _currentUser) ;
+            if (updated is null)
+                return NotFound();
+
+            // Return 200 OK + the JSON body:
+            return Ok(updated);
         }
 
         /// <summary>

@@ -1,0 +1,44 @@
+{
+  "id": "article-generation",
+  "name": "Article Generator",
+  "description": "Calls LLM to create an article & images based on the affiliate link.",
+  "nodeType": "action",
+  "configurationSchemaJson": {
+    "type": "object",
+    "properties": {
+      "model": {
+        "type": "string",
+        "enum": [ "gpt-4o", "local-llama" ],
+        "default": "gpt-4o"
+      },
+      "imageProvider": {
+        "type": "string",
+        "enum": [ "unsplash", "dalle" ],
+        "default": "unsplash"
+      },
+      "maxWords": {
+        "type": "integer",
+        "default": 800
+      }
+    },
+    "required": [ "model" ]
+  },
+  "inputs": [
+    {
+      "name": "link",
+      "type": "object"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "article",
+      "type": "object"
+    }
+  ],
+  "visual": {
+    "icon": "pen",
+    "color": "#03A9F4",
+    "category": "Content"
+  },
+  "reactComponent": "ArticleGenerationNode"
+}

@@ -2,98 +2,23 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkflowEngine.Infrastructure.Data;
 
 #nullable disable
 
-namespace WorkflowEngine.Infrastructure.Migrations
+namespace WorkflowEngine.Infrastructure.Migrations.User
 {
     [DbContext(typeof(WorkflowEngineDbContext))]
-    partial class WorkflowEngineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250606030710_AddNodeDefinitionsTable2")]
+    partial class AddNodeDefinitionsTable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
-
-            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", b =>
-                {
-                    b.Property<Guid>("NodeInstanceId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CsvPath")
-                        .HasMaxLength(512)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Mode")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("NodeInstanceId");
-
-                    b.ToTable("AffiliateLinkInputConfigs");
-                });
-
-            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1024)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("NodeInstanceId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PrePromptName")
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NodeInstanceId");
-
-                    b.ToTable("AffiliateLinkInputEntries");
-                });
-
-            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.PrePrompt", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PromptText")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PrePrompts");
-                });
 
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.NodeConnection", b =>
                 {
@@ -250,28 +175,6 @@ namespace WorkflowEngine.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", b =>
-                {
-                    b.HasOne("WorkflowEngine.Infrastructure.Entities.NodeInstance", "NodeInstance")
-                        .WithOne()
-                        .HasForeignKey("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", "NodeInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NodeInstance");
-                });
-
-            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputEntry", b =>
-                {
-                    b.HasOne("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", "Config")
-                        .WithMany("Entries")
-                        .HasForeignKey("NodeInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Config");
-                });
-
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.NodeConnection", b =>
                 {
                     b.HasOne("WorkflowEngine.Infrastructure.Entities.NodeInstance", "FromNode")
@@ -311,11 +214,6 @@ namespace WorkflowEngine.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", b =>
-                {
-                    b.Navigation("Entries");
                 });
 
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.NodeInstance", b =>

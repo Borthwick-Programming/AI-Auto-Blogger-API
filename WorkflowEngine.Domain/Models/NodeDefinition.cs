@@ -22,9 +22,11 @@ namespace WorkflowEngine.Domain.Models
     string Id,
     string Name,
     string Description,
-    string NodeType,
+    string NodeType, // e.g. "action", "transformer"
     JsonElement ConfigurationSchemaJson,
     List<PortDefinition> Inputs,
-    List<PortDefinition> Outputs
+    List<PortDefinition> Outputs,
+     string? Icon = null,  // "pencil", "video", etc.
+     string? ReactComponent = null
 );
 }

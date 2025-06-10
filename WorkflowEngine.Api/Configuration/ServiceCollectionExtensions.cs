@@ -29,6 +29,7 @@ namespace WorkflowEngine.Api.Configuration
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<INodeInstanceService, NodeInstanceService>();
             services.AddScoped<INodeConnectionService, NodeConnectionService>();
+            services.AddScoped<IPrePromptService, PrePromptService>();
             return services;
         }
 

@@ -1,0 +1,33 @@
+{
+  "id": "affiliate-link-input",
+  "name": "Affiliate Link Input",
+  "description": "Reads the next unprocessed affiliate link from links.txt (or DB).",
+  "nodeType": "input",
+  "configurationSchemaJson": {
+    "type": "object",
+    "properties": {
+      "sourceFile": {
+        "type": "string",
+        "default": "links.txt"
+      },
+      "markAsProcessed": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "required": [ "sourceFile" ]
+  },
+  "inputs": [],
+  "outputs": [
+    {
+      "name": "link",
+      "type": "object"
+    }
+  ],
+  "visual": {
+    "icon": "link",
+    "color": "#4CAF50",
+    "category": "Affiliate"
+  },
+  "reactComponent": "AffiliateLinkInputNode"
+}

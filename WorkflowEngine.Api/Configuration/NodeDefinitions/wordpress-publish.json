@@ -1,0 +1,38 @@
+{
+  "id": "wordpress-publish",
+  "name": "WordPress Publish",
+  "description": "Publishes HTML content to a configured WordPress site.",
+  "nodeType": "action",
+  "configurationSchemaJson": {
+    "type": "object",
+    "properties": {
+      "siteUrl": { "type": "string" },
+      "username": { "type": "string" },
+      "appPassword": { "type": "string" },
+      "status": {
+        "type": "string",
+        "enum": [ "draft", "publish" ],
+        "default": "publish"
+      }
+    },
+    "required": [ "siteUrl", "username", "appPassword" ]
+  },
+  "inputs": [
+    {
+      "name": "article",
+      "type": "object"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "post",
+      "type": "object"
+    }
+  ],
+  "visual": {
+    "icon": "wordpress",
+    "color": "#21759B",
+    "category": "Publishing"
+  },
+  "reactComponent": "WordPressPublishNode"
+}
