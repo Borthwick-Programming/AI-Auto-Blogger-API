@@ -35,6 +35,9 @@ namespace WorkflowEngine.Infrastructure.Data
         public DbSet<PrePrompt> PrePrompts { get; set; }
         public DbSet<AffiliateLinkInputConfig> AffiliateLinkInputConfigs { get; set; }
         public DbSet<AffiliateLinkInputEntry> AffiliateLinkInputEntries { get; set; }
+        public DbSet<LinkProcessingHistory> LinkProcessingHistory { get; set; }
+        public DbSet<AffiliateLinkEntrySchedule> AffiliateLinkEntrySchedules { get; set; }
+
 
         /// <summary>
         /// Configures the entity framework model for the context by defining entity relationships, constraints, and indexes.
@@ -129,6 +132,29 @@ namespace WorkflowEngine.Infrastructure.Data
                   .HasOne(e => e.Config)
                   .WithMany(c => c.Entries)
                   .HasForeignKey(e => e.NodeInstanceId)
+                  .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<LinkProcessingHistory>(b =>
+            {
+                b.HasKey(h => h.Id);
+                b.Property(h => h.ProcessedAt).IsRequired();
+                b.Property(h => h.EntryId).IsRequired();
+
+                b.HasOne(h => h.Entry)                     // <-- point at the navigation property
+                 .WithMany(e => e.History)                // <-- Entry.History nav-prop
+                 .HasForeignKey(h => h.EntryId)
+                 .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<AffiliateLinkEntrySchedule>(b =>
+            {
+                b.HasKey(x => x.EntryId);
+                b.Property(x => x.Frequency).IsRequired().HasMaxLength(16).HasDefaultValue("Daily");
+                b
+                  .HasOne(x => x.Entry)
+                  .WithOne(e => e.Schedule)
+                  .HasForeignKey<AffiliateLinkEntrySchedule>(x => x.EntryId)
                   .OnDelete(DeleteBehavior.Cascade);
             });
 

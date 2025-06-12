@@ -1,13 +1,16 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Reflection;
 using WorkflowEngine.Api.Auth;
 using WorkflowEngine.Api.Configuration;
 using WorkflowEngine.Api.Services;
 using WorkflowEngine.Core.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using WorkflowEngine.Infrastructure.Data;
 using WorkflowEngine.Domain.Models;
 using WorkflowEngine.Runtime.Interfaces;
 using WorkflowEngine.Runtime.Services;
@@ -107,5 +110,11 @@ app.UseAuthorization();
 
 // Enable routing to controllers (like NodeDefinitionsController)
 app.MapControllers();
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<WorkflowEngineDbContext>();
+//    Console.WriteLine($"📂 Using DB at: {db.Database.GetDbConnection().DataSource}");
+//}
 
 app.Run();

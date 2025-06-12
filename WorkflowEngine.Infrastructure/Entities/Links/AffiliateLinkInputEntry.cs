@@ -33,5 +33,11 @@ namespace WorkflowEngine.Infrastructure.Entities.Links
 
         [MaxLength(128)]
         public string? PrePromptName { get; set; }
+
+        public ICollection<LinkProcessingHistory> History { get; set; }
+  = new List<LinkProcessingHistory>();
+
+        public AffiliateLinkEntrySchedule? Schedule { get; set; }
+
     }
 }

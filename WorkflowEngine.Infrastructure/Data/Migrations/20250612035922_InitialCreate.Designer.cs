@@ -2,20 +2,40 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkflowEngine.Infrastructure.Data;
 
 #nullable disable
 
-namespace WorkflowEngine.Infrastructure.Migrations
+namespace WorkflowEngine.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(WorkflowEngineDbContext))]
-    partial class WorkflowEngineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250612035922_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
+
+            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkEntrySchedule", b =>
+                {
+                    b.Property<int>("EntryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Frequency")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(16)
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("Daily");
+
+                    b.HasKey("EntryId");
+
+                    b.ToTable("AffiliateLinkEntrySchedules");
+                });
 
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", b =>
                 {
@@ -68,6 +88,25 @@ namespace WorkflowEngine.Infrastructure.Migrations
                     b.HasIndex("NodeInstanceId");
 
                     b.ToTable("AffiliateLinkInputEntries");
+                });
+
+            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.LinkProcessingHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EntryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntryId");
+
+                    b.ToTable("LinkProcessingHistory");
                 });
 
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.PrePrompt", b =>
@@ -250,6 +289,17 @@ namespace WorkflowEngine.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkEntrySchedule", b =>
+                {
+                    b.HasOne("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputEntry", "Entry")
+                        .WithOne("Schedule")
+                        .HasForeignKey("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkEntrySchedule", "EntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entry");
+                });
+
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", b =>
                 {
                     b.HasOne("WorkflowEngine.Infrastructure.Entities.NodeInstance", "NodeInstance")
@@ -270,6 +320,17 @@ namespace WorkflowEngine.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Config");
+                });
+
+            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.LinkProcessingHistory", b =>
+                {
+                    b.HasOne("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputEntry", "Entry")
+                        .WithMany("History")
+                        .HasForeignKey("EntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entry");
                 });
 
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.NodeConnection", b =>
@@ -316,6 +377,13 @@ namespace WorkflowEngine.Infrastructure.Migrations
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputConfig", b =>
                 {
                     b.Navigation("Entries");
+                });
+
+            modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.Links.AffiliateLinkInputEntry", b =>
+                {
+                    b.Navigation("History");
+
+                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("WorkflowEngine.Infrastructure.Entities.NodeInstance", b =>
